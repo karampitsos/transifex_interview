@@ -3,6 +3,7 @@ import asyncio
 import random
 from pprint import pprint
 import json
+from typing import List
 
 
 class TransifexClient:
@@ -19,13 +20,12 @@ class TransifexClient:
         }
         return _headers
     
-    async def list_resourcers(self):
+    async def list_resourcers(self) -> List[str]:
         url = 'https://rest.api.transifex.com/resources'
         async with aiohttp.ClientSession() as session:
             async with session.get(url, params = {'filter[project]': f'o:{self.organization}:p:{self.project}'}, headers=self.headers) as response:
                 data = await response.json()
-                return data
-
+                return [d['attributes']['slug'] for d in data['data']]
 
     async def create_resource(self, name: str):
 
@@ -59,11 +59,11 @@ class TransifexClient:
                 return trivia
 
 
-    async def send_file(self, resource: str):
+    async def send_file(self, resource: str, content: str):
         json_data = {
             "data": {
                 "attributes": {
-                "content": json.dumps({'team': 'aek'}),
+                "content": content,
                 "content_encoding": "text"
                 },
                 "relationships": {
@@ -83,6 +83,12 @@ class TransifexClient:
             async with session.post(url, json=json_data, headers=self.headers) as response:
                 trivia = await response.json()
                 return trivia
+    
+    async def send(self, resource: str, content: str):
+        resources = await self.list_resourcers()
+        if resource not in resources:
+            await self.create_resource(resource)
+        await self.send_file(resource, content)
 
 client = TransifexClient()
-pprint(asyncio.run(client.list_resourcers()))
+pprint(asyncio.run(client.send('new', json.dumps({'name': 'osfp'}))))

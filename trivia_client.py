@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 from typing import Optional, Dict
 import random
+from pprint import pprint
 
 
 class TriviaClient:
@@ -31,3 +32,6 @@ class TriviaClient:
             async with session.get(self.url, params=params) as response:
                 trivia = await response.json()
                 return trivia
+
+client = TriviaClient()
+pprint(asyncio.run(client.get(10)))
