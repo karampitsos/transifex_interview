@@ -1,9 +1,10 @@
 from typing import Dict
+from parsers import Parser
 import json
 import uuid
 
 
-class TriviaParser:
+class TriviaParser(Parser):
     
     def parse(self, data: Dict) -> str:
 
@@ -11,11 +12,9 @@ class TriviaParser:
         results = data['results']
         for result in results:
             id = self.get_uuid()
+            parsed[f'question:{id}'] = result['question']
+            parsed[f'correct_answer:{id}'] = result['correct_answer']
             incorrect_answers = result['incorrect_answers']
-            question = result['question']
-            correct_answer = result['correct_answer']
-            parsed[f'question:{id}'] = question
-            parsed[f'correct_answer:{id}'] = correct_answer
             for i, answer in enumerate(incorrect_answers):
                 parsed[f'incorrect_answers:{i}:{id}'] = answer
         

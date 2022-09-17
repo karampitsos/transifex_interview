@@ -1,17 +1,19 @@
 from __future__ import annotations
 from typing import Awaitable, List
 import asyncio
-from category_map import category_map
-from slugify import slugify
+from clients import Client
+from parsers import Parser
+from transifex_client import TransifexClient
 
 
 class TriviaPipeline:
 
-    async def run(self, consumer: Awaitable, parser: Awaitable, client: Awaitable, category: int):
-        print( f'run pipeline: {category}')
-        data = await consumer()
-        parsed = parser(data)
-        response = await client(slugify(category_map[category]), parsed)
+    async def run(self, consumer: Client, parser: Parser, client: TransifexClient, resource: str):
+        data = await consumer.get()
+        print(data)
+        parsed = parser.parse(data)
+        print(parsed)
+        response = await client.send(resource, parsed)
         return response
     
     @classmethod
