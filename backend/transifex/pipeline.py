@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import Awaitable, List
 import asyncio
-from clients import Client
-from parsers import Parser
-from transifex_client import TransifexClient
+from transifex.clients import Client
+from transifex.parsers import Parser
+from transifex.transifex_client import TransifexClient
 
 
 class Pipeline:

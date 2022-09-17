@@ -1,5 +1,5 @@
 from typing import Dict
-from parsers import Parser
+from transifex.parsers import Parser
 import json
 import uuid
 

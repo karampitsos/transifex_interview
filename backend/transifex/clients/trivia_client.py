@@ -2,7 +2,7 @@ import aiohttp
 import asyncio
 from typing import Optional, Dict
 import random
-from clients import Client
+from transifex.clients import Client
 from pydantic import BaseModel
 
 

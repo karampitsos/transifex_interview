@@ -1,9 +1,9 @@
 from typing import List
 from category_map import category_map
-from clients import TriviaClient, TriviaInput
-from parsers import TriviaParser
-from transifex_client import TransifexClient
-from pipeline import Pipeline
+from transifex.clients import TriviaClient, TriviaInput
+from transifex.parsers import TriviaParser
+from transifex import TransifexClient
+from transifex import Pipeline
 from fastapi import FastAPI
 from pydantic import BaseModel
 from slugify import slugify
