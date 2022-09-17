@@ -7,10 +7,10 @@ from typing import List
 
 
 class TransifexClient:
-    def __init__(self, token: str = '1/8d517de8ea2b8c9a0d872c1e47801c5f33eaa12e'):
+    def __init__(self, token: str, project: str, organization: str):
         self.token = token
-        self.project = 'transifex_interview'
-        self.organization = 'karampitsos'
+        self.project = project
+        self.organization = organization
     
     @property
     def headers(self):
@@ -85,10 +85,9 @@ class TransifexClient:
                 return trivia
     
     async def send(self, resource: str, content: str):
+        print(f'run transifex client {resource}')
         resources = await self.list_resourcers()
         if resource not in resources:
             await self.create_resource(resource)
-        await self.send_file(resource, content)
-
-client = TransifexClient()
-pprint(asyncio.run(client.send('new', json.dumps({'name': 'osfp'}))))
+        response = await self.send_file(resource, content)
+        return response
