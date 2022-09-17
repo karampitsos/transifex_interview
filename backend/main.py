@@ -1,7 +1,7 @@
 from typing import List, Union
 from category_map import category_map
-from trivia_client import TriviaClient
-from trivia_parser import TriviaParser
+from clients.trivia_client import TriviaClient
+from parsers.trivia_parser import TriviaParser
 from transifex_client import TransifexClient
 from pipeline import TriviaPipeline
 from fastapi import FastAPI

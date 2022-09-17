@@ -9,7 +9,7 @@ class TriviaPipeline:
 
     async def run(self, consumer: Awaitable, parser: Awaitable, client: Awaitable, category: int):
         print( f'run pipeline: {category}')
-        data = await consumer(category)
+        data = await consumer()
         parsed = parser(data)
         response = await client(slugify(category_map[category]), parsed)
         return response

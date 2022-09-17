@@ -1,8 +1,6 @@
 import aiohttp
 import asyncio
 import random
-from pprint import pprint
-import json
 from typing import List
 
 
