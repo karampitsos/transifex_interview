@@ -1,6 +1,6 @@
 import aiohttp
 import asyncio
-from typing import Optional, Dict, Optional
+from typing import Optional, Dict
 import random
 from clients import Client
 from pydantic import BaseModel
@@ -24,6 +24,7 @@ class TriviaClient(Client):
         print(f'run trivia client: {self.data.category}')
         async with aiohttp.ClientSession() as session:
             await asyncio.sleep(random.random()*0.5)
-            async with session.get(self.url, params=self.data.dict(exclude_none=True)) as response:
+            params = self.data.dict(exclude_none=True)
+            async with session.get(self.url, params=params) as response:
                 trivia = await response.json()
                 return trivia

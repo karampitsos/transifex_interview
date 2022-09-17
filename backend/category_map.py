@@ -1,3 +1,7 @@
+import requests
+import json
+
+
 category_map = {
     0:  'Entertainment: Comics',
     9:  'General Knowledge',
@@ -26,13 +30,13 @@ category_map = {
     32: 'Entertainment: Cartoon & Animations'
 }
 
-import requests
-import json
 
 def collect_categories():
     trials = range(100)
+
     for trial in trials:
-        response = requests.get(f'https://opentdb.com/api.php?amount=1&category={trial}')
+        url = f'https://opentdb.com/api.php?amount=1&category={trial}'
+        response = requests.get(url)
         print(trial)
         try:
             print(json.loads(response.text)['results'][0]['category'])

@@ -9,19 +9,22 @@ class TransifexClient:
         self.token = token
         self.project = project
         self.organization = organization
-    
+
     @property
     def headers(self):
-        _headers =  {
+        _headers = {
             'Authorization': f'Bearer {self.token}',
             'Content-Type': 'application/vnd.api+json'
         }
         return _headers
-    
+
     async def list_resourcers(self) -> List[str]:
         url = 'https://rest.api.transifex.com/resources'
+        params = {'filter[project]': f'o:{self.organization}:p:{self.project}'}
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, params = {'filter[project]': f'o:{self.organization}:p:{self.project}'}, headers=self.headers) as response:
+            async with session.get(url, params=params,
+                                   headers=self.headers) as response:
+
                 data = await response.json()
                 return [d['attributes']['slug'] for d in data['data']]
 
@@ -30,47 +33,48 @@ class TransifexClient:
         json_data = {
             "data": {
                 "attributes": {
-                "name": name,
-                "slug": name,
+                    "name": name,
+                    "slug": name,
                 },
                 "relationships": {
-                "i18n_format": {
-                    "data": {
-                    "id": "KEYVALUEJSON",
-                    "type": "i18n_formats"
+                    "i18n_format": {
+                        "data": {
+                            "id": "KEYVALUEJSON",
+                            "type": "i18n_formats"
+                        }
+                    },
+                    "project": {
+                        "data": {
+                            "id": f"o:{self.organization}:p:{self.project}",
+                            "type": "projects"
+                        }
                     }
-                },
-                "project": {
-                    "data": {
-                    "id": f"o:{self.organization}:p:{self.project}",
-                    "type": "projects"
-                    }
-                }
                 },
                 "type": "resources"
             }
             }
         url = 'https://rest.api.transifex.com/resources'
         async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=json_data, headers=self.headers) as response:
+            async with session.post(url, json=json_data,
+                                    headers=self.headers) as response:
                 trivia = await response.json()
                 return trivia
 
-
     async def send_file(self, resource: str, content: str):
+        resource_slug = f"o:{self.organization}:p:{self.project}:r:{resource}"
         json_data = {
             "data": {
                 "attributes": {
-                "content": content,
-                "content_encoding": "text"
+                    "content": content,
+                    "content_encoding": "text"
                 },
                 "relationships": {
-                "resource": {
-                    "data": {
-                    "id": f"o:{self.organization}:p:{self.project}:r:{resource}",
-                    "type": "resources"
+                    "resource": {
+                            "data": {
+                                "id": resource_slug,
+                                "type": "resources"
+                            }
                     }
-                }
                 },
                 "type": "resource_strings_async_uploads"
             }
@@ -78,10 +82,11 @@ class TransifexClient:
         url = 'https://rest.api.transifex.com/resource_strings_async_uploads'
         async with aiohttp.ClientSession() as session:
             await asyncio.sleep(random.random()*0.5)
-            async with session.post(url, json=json_data, headers=self.headers) as response:
+            async with session.post(url, json=json_data,
+                                    headers=self.headers) as response:
                 trivia = await response.json()
                 return trivia
-    
+
     async def send(self, resource: str, content: str):
         print(f'run transifex client {resource}')
         resources = await self.list_resourcers()

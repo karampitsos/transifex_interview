@@ -6,16 +6,15 @@ from parsers import Parser
 from transifex_client import TransifexClient
 
 
-class TriviaPipeline:
+class Pipeline:
 
-    async def run(self, consumer: Client, parser: Parser, client: TransifexClient, resource: str):
+    async def run(self, consumer: Client, parser: Parser,
+                  client: TransifexClient, resource: str):
         data = await consumer.get()
-        print(data)
         parsed = parser.parse(data)
-        print(parsed)
         response = await client.send(resource, parsed)
         return response
-    
+
     @classmethod
     async def run_pipelines(cls, pipelines: List[Awaitable]):
         results = await asyncio.gather(*pipelines)

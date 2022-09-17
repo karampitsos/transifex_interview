@@ -5,7 +5,7 @@ import uuid
 
 
 class TriviaParser(Parser):
-    
+
     def parse(self, data: Dict) -> str:
 
         parsed = {}
@@ -17,8 +17,8 @@ class TriviaParser(Parser):
             incorrect_answers = result['incorrect_answers']
             for i, answer in enumerate(incorrect_answers):
                 parsed[f'incorrect_answers:{i}:{id}'] = answer
-        
+
         return json.dumps(parsed)
-    
+
     def get_uuid(self) -> str:
         return uuid.uuid4().hex
