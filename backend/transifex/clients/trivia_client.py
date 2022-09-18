@@ -1,4 +1,4 @@
-import aiohttp
+from transifex import web
 from typing import Optional, Dict
 from transifex.clients import Client
 from pydantic import BaseModel
@@ -23,8 +23,5 @@ class TriviaClient(Client):
         return self.data.dict(exclude_none=True)
 
     async def get(self) -> Dict:
-        
-        async with aiohttp.ClientSession() as session:
-            async with session.get(self.url, params=self.params) as response:
-                trivia = await response.json()
-                return trivia
+        trivias = await web.get(self.url, self.params)
+        return trivias

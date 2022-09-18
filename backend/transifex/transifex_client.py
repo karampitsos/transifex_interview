@@ -1,7 +1,5 @@
-import aiohttp
-import asyncio
-import random
-from typing import List
+from typing import List, Dict
+from transifex import web
 
 
 class TransifexClient:
@@ -21,12 +19,8 @@ class TransifexClient:
     async def list_resourcers(self) -> List[str]:
         url = 'https://rest.api.transifex.com/resources'
         params = {'filter[project]': f'o:{self.organization}:p:{self.project}'}
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params,
-                                   headers=self.headers) as response:
-
-                data = await response.json()
-                return [d['attributes']['slug'] for d in data['data']]
+        data = await web.get(url, params, self.headers)
+        return [d['attributes']['slug'] for d in data['data']]
 
     async def create_resource(self, name: str):
 
@@ -54,13 +48,10 @@ class TransifexClient:
             }
             }
         url = 'https://rest.api.transifex.com/resources'
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=json_data,
-                                    headers=self.headers) as response:
-                trivia = await response.json()
-                return trivia
+        data = await web.post(url, json_data, self.headers)
+        return data
 
-    async def send_file(self, resource: str, content: str):
+    async def send_file(self, resource: str, content: str) -> Dict:
         resource_slug = f"o:{self.organization}:p:{self.project}:r:{resource}"
         json_data = {
             "data": {
@@ -80,15 +71,10 @@ class TransifexClient:
             }
             }
         url = 'https://rest.api.transifex.com/resource_strings_async_uploads'
-        async with aiohttp.ClientSession() as session:
-            await asyncio.sleep(random.random()*0.5)
-            async with session.post(url, json=json_data,
-                                    headers=self.headers) as response:
-                trivia = await response.json()
-                return trivia
+        data = await web.post(url, json_data, self.headers)
+        return data
 
     async def send(self, resource: str, content: str):
-        print(f'run transifex client {resource}')
         resources = await self.list_resourcers()
         if resource not in resources:
             await self.create_resource(resource)
