@@ -10,15 +10,18 @@ class TriviaParser(Parser):
 
         parsed = {}
         results = data['results']
-        for result in results:
-            id = self.get_uuid()
-            parsed[f'question:{id}'] = result['question']
-            parsed[f'correct_answer:{id}'] = result['correct_answer']
+        uuids = self.get_uuids(len(results))
+        for j, result in enumerate(results):
+            parsed[f'question:{uuids[j]}'] = result['question']
+            parsed[f'correct_answer:{uuids[j]}'] = result['correct_answer']
             incorrect_answers = result['incorrect_answers']
             for i, answer in enumerate(incorrect_answers):
-                parsed[f'incorrect_answers:{i}:{id}'] = answer
+                parsed[f'incorrect_answers:{i}:{uuids[j]}'] = answer
 
         return json.dumps(parsed)
 
-    def get_uuid(self) -> str:
-        return uuid.uuid4().hex
+    def get_uuids(self, length) -> str:
+        return [uuid.uuid4().hex for _ in range(length)]
+    
+    def reparse(self, output: str) -> Dict:
+        pass
