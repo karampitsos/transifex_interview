@@ -1,5 +1,5 @@
 from typing import List
-from category_map import category_map
+from transifex.clients.trivia_client import category_map
 from transifex.clients import TriviaClient, TriviaInput
 from transifex.parsers import TriviaParser
 from transifex import TransifexClient
