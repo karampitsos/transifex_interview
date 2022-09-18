@@ -1,27 +1,25 @@
 from typing import Dict
 from transifex.parsers import Parser
-import json
-import uuid
+import hashlib
 
 
 class TriviaParser(Parser):
 
-    def parse(self, data: Dict) -> str:
+    def parse(self, data: Dict) -> Dict:
 
         parsed = {}
         results = data['results']
-        uuids = self.get_uuids(len(results))
-        for j, result in enumerate(results):
-            parsed[f'question:{uuids[j]}'] = result['question']
-            parsed[f'correct_answer:{uuids[j]}'] = result['correct_answer']
+        for result in results:
+            question: str = result['question']
+            hash = hashlib.md5(question.encode()).hexdigest()
+            parsed[f'question:{hash}'] = question
+            parsed[f'correct_answer:{hash}'] = result['correct_answer']
             incorrect_answers = result['incorrect_answers']
             for i, answer in enumerate(incorrect_answers):
-                parsed[f'incorrect_answers:{i}:{uuids[j]}'] = answer
+                parsed[f'incorrect_answers:{i}:{hash}'] = answer
 
-        return json.dumps(parsed)
+        return parsed
 
-    def get_uuids(self, length) -> str:
-        return [uuid.uuid4().hex for _ in range(length)]
     
     def reparse(self, output: str) -> Dict:
         pass
