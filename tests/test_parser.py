@@ -16,11 +16,18 @@ def output() -> str:
         _output = json.load(file)
     return _output
 
+@pytest.fixture
+def reparse_output() -> str:
+    with open('tests/data/trivia_reparse.json', 'r') as file:
+        _reparse_output = json.load(file)
+    return _reparse_output
+
 
 def test_trivia_parser(input, output):
 
     assert TriviaParser().parse(input) == output
 
 
-#def test_trivia_reparse(data, output):
-#    assert True
+def test_trivia_reparse(output, reparse_output):
+
+    assert TriviaParser().reparse(output) == reparse_output

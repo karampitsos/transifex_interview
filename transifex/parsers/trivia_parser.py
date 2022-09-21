@@ -36,9 +36,9 @@ class TriviaParser(Parser):
             type = keys[0]
             if type == 'incorrect_answers':
                 if type not in output[hash]:
-                    output[hash][type] = [body]
-                else:
-                    output[hash][type].append(body)
-            output[hash][type] = body
-
+                    output[hash][type] = []
+                    
+                output[hash][type].append(body)
+            else:
+                output[hash][type] = body
         return output
