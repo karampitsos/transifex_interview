@@ -5,5 +5,5 @@ from typing import Dict
 class Parser(ABC):
 
     @abstractmethod
-    def parse(self, data: Dict) -> str:
+    def parse(self, data: Dict) -> Dict[str, str]:
         pass

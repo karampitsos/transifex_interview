@@ -1,5 +1,5 @@
 from transifex import web
-from typing import Optional, Dict
+from typing import Optional, Dict, List, Tuple
 from transifex.clients import Client
 from pydantic import BaseModel
 import requests
@@ -19,9 +19,9 @@ class TriviaClient(Client):
 
     def __init__(self, data: TriviaInput):
         self.data = data
-    
+
     @property
-    def params(self):
+    def params(self) -> Dict:
         return self.data.dict(exclude_none=True)
 
     async def get(self) -> Dict:
@@ -58,14 +58,17 @@ category_map = {
 }
 
 
-def collect_categories():
-    trials = range(100)
+def collect_categories(trials: List[int]) -> List[Tuple(int, str)]:
 
+    categories: List[str] = []
     for trial in trials:
         url = f'https://opentdb.com/api.php?amount=1&category={trial}'
         response = requests.get(url)
-        print(trial)
         try:
-            print(json.loads(response.text)['results'][0]['category'])
-        except:
-            print('None')
+            categories.append(
+                (trial, json.loads(response.text)['results'][0]['category'])
+                )
+        except requests.exceptions.RequestException:
+            print(f'None category for {trial}')
+
+    return categories
