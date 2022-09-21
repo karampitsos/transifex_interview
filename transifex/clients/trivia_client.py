@@ -58,7 +58,7 @@ category_map = {
 }
 
 
-def collect_categories(trials: List[int]) -> List[Tuple(int, str)]:
+def collect_categories(trials: List[int]) -> List[Tuple[int, str]]:
 
     categories: List[str] = []
     for trial in trials:
