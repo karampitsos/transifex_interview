@@ -1,6 +1,7 @@
 import requests
 import os
 from typing import Dict
+import json
 
 
 def create_resource(categories):
@@ -30,7 +31,7 @@ def main():
         if ex != 'Y':
             break
 
-    create_resource(categories)
+    print(json.loads(create_resource(categories).text))
 
 
 if __name__ == '__main__':
