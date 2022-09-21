@@ -37,7 +37,7 @@ class TriviaParser(Parser):
             if type == 'incorrect_answers':
                 if type not in output[hash]:
                     output[hash][type] = []
-                    
+
                 output[hash][type].append(body)
             else:
                 output[hash][type] = body

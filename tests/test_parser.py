@@ -10,11 +10,13 @@ def input() -> Dict:
         _input = json.load(file)
     return _input
 
+
 @pytest.fixture
 def output() -> str:
     with open('tests/data/trivia_output.json', 'r') as file:
         _output = json.load(file)
     return _output
+
 
 @pytest.fixture
 def reparse_output() -> str:
